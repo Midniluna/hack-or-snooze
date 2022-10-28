@@ -23,8 +23,11 @@ function generateStoryMarkup(story) {
 	// console.debug("generateStoryMarkup", story);
 
 	const hostName = story.getHostName();
+	const showStar = Boolean(currentUser);
+
 	return $(`
       <li id="${story.storyId}">
+	  	${showStar ? getStarHTML(story, currentUser) : ""}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -33,6 +36,15 @@ function generateStoryMarkup(story) {
         <small class="story-user">posted by ${story.username}</small>
       </li>
     `);
+}
+
+function getStarHTML(story, user) {
+	const isFavorite = user.isFavorite(story);
+	const starType = isFavorite ? "fas" : "far";
+	return `
+		<span class="star">
+		  <i class="${starType} fa-star"></i>
+		</span>`;
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -65,4 +77,39 @@ async function submitNewStory(e) {
 	$submitForm.slideUp("slow");
 	$submitForm.trigger("reset");
 }
+
+function putFavoritesListOnPage() {
+	$faveStories.empty();
+
+	if (currentUser.favorites.length === 0) {
+		$faveStories.append("<h5>No favorites added!</h5>");
+	} else {
+		for (let story of currentUser.favorites) {
+			const $story = generateStoryMarkup(story);
+			$faveStories.append($story);
+		}
+	}
+
+	$faveStories.show();
+}
+
+async function toggleStoryFavorite(evt) {
+	console.debug("toggleStoryFavorite");
+
+	const $tgt = $(evt.target);
+	const $closestLi = $tgt.closest("li");
+	const storyId = $closestLi.attr("id");
+	const story = storyList.stories.find((s) => s.storyId === storyId);
+
+	if ($tgt.hasClass("fas")) {
+		await currentUser.removeFavorite(story);
+		$tgt.closest("i").toggleClass("fas far");
+	} else {
+		await currentUser.addFavorite(story);
+		$tgt.closest("i").toggleClass("fas far");
+	}
+}
+
+$storiesLists.on("click", ".star", toggleStoryFavorite);
+
 $submitForm.on("submit", submitNewStory);

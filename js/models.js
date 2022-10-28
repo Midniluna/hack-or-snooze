@@ -194,4 +194,28 @@ class User {
 			return null;
 		}
 	}
+
+	async addFavorite(story) {
+		this.favorites.push(story);
+		await this.addOrDeleteFave("add", story);
+	}
+
+	async removeFavorite(story) {
+		this.favorites = this.favorites.filter((s) => s.storyId !== story.storyId);
+		await this.addOrDeleteFave("delete", story);
+	}
+
+	async addOrDeleteFave(action, story) {
+		const newAction = action === "add" ? "POST" : "DELETE";
+		const token = this.loginToken;
+		await axios({
+			url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+			method: newAction,
+			data: { token },
+		});
+	}
+
+	isFavorite(story) {
+		return this.favorites.some((s) => s.storyId === story.storyId);
+	}
 }
