@@ -49,7 +49,14 @@ async function signup(evt) {
 	$signupForm.trigger("reset");
 }
 
-$signupForm.on("submit", signup);
+// $signupForm.on("submit", signup);
+$signupForm.on("submit", function handleExistingUsername() {
+	try {
+		signup;
+	} catch (error) {
+		console.error(error);
+	}
+});
 
 /** Handle click of logout button
  *
