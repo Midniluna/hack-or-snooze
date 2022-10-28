@@ -1,5 +1,4 @@
 "use strict";
-rylist;
 
 // So we don't have to keep re-finding things on page, find DOM elements once:
 
