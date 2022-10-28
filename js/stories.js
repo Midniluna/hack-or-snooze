@@ -2,6 +2,7 @@
 
 // This is the global list of the stories, an instance of StoryList
 let storyList;
+let showDeleteBtn = false;
 
 /** Get and show stories when site first loads. */
 
@@ -19,7 +20,7 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
-function generateStoryMarkup(story) {
+function generateStoryMarkup(story, showDeleteBtn = false) {
 	// console.debug("generateStoryMarkup", story);
 
 	const hostName = story.getHostName();
@@ -27,6 +28,7 @@ function generateStoryMarkup(story) {
 
 	return $(`
       <li id="${story.storyId}">
+	  ${showDeleteBtn ? getDeleteHTML() : ""}
 	  	${showStar ? getStarHTML(story, currentUser) : ""}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
@@ -47,6 +49,12 @@ function getStarHTML(story, user) {
 		</span>`;
 }
 
+function getDeleteHTML() {
+	return `<span class="trash-can">
+	<i class="fas fa-trash-alt"></i>
+	</span>`;
+}
+
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 function putStoriesOnPage() {
@@ -63,6 +71,17 @@ function putStoriesOnPage() {
 	$allStoriesList.show();
 }
 
+async function deleteStory(e) {
+	const $closestLi = $(e.target).closest("li");
+	const storyId = $closestLi.attr("id");
+
+	await storyList.removeStory(currentUser, storyId);
+
+	putUserStoriesOnPage();
+}
+
+$ownStories.on("click", ".trash-can", deleteStory);
+
 async function submitNewStory(e) {
 	e.preventDefault();
 	const title = $("#create-title").val();
@@ -76,6 +95,21 @@ async function submitNewStory(e) {
 	$allStoriesList.prepend($story);
 	$submitForm.slideUp("slow");
 	$submitForm.trigger("reset");
+}
+
+function putUserStoriesOnPage() {
+	$ownStories.empty();
+
+	if (currentUser.ownStories.length === 0) {
+		$ownStories.append("<h5>No stories added by user yet!</h5>");
+	} else {
+		for (let story of currentUser.ownStories) {
+			let $story = generateStoryMarkup(story, (showDeleteBtn = true));
+			$ownStories.append($story);
+		}
+	}
+
+	$ownStories.show();
 }
 
 function putFavoritesListOnPage() {

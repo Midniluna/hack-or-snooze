@@ -29,6 +29,14 @@ function navFavoritesClick() {
 
 $body.on("click", "#nav-favorites", navFavoritesClick);
 
+function navMyStories() {
+	hidePageComponents();
+	putUserStoriesOnPage();
+	$ownStories.show();
+}
+
+$body.on("click", "#nav-stories", navMyStories);
+
 /** Show login/signup on click on "login" */
 
 function navLoginClick(evt) {
