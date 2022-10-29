@@ -2,15 +2,9 @@
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
 
-/******************************************************************************
- * Story: a single story in the system
- */
-
+// Instance for storing a single story's fata
 class Story {
-	/** Make instance of Story from data object about story:
-	 *   - {title, author, url, username, storyId, createdAt}
-	 */
-
+	// Using story data from API to store info in a Story Instance
 	constructor({ storyId, title, author, url, username, createdAt }) {
 		this.storyId = storyId;
 		this.title = title;
@@ -27,10 +21,7 @@ class Story {
 	}
 }
 
-/******************************************************************************
- * List of Story instances: used by UI to show story lists in DOM.
- */
-
+// Full list of available from the API, storing individual story instances into list and using it to apply stories to DOM
 class StoryList {
 	constructor(stories) {
 		this.stories = stories;
