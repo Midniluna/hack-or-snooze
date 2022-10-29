@@ -14,6 +14,10 @@ const $storiesLists = $(".stories-list");
 const $loginForm = $("#login-form");
 const $signupForm = $("#signup-form");
 
+// error popups
+const $failedUser = $("#failed-signup");
+const $failedLogin = $("#failed-login");
+
 const $submitForm = $("#submit-form");
 
 const $navSubmitStory = $("#nav-submit");

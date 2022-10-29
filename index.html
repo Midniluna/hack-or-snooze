@@ -100,6 +100,12 @@
 						autocomplete="current-password"
 					/>
 				</div>
+				<div class="error-mssg hidden" id="failed-login">
+					<span
+						><i class="fas fa-exclamation-circle"></i> Username or password
+						invalid!</span
+					>
+				</div>
 				<button type="submit">login</button>
 				<hr />
 			</form>
@@ -127,6 +133,10 @@
 						autocomplete="new-password"
 						type="password"
 					/>
+				</div>
+				<div class="error-mssg hidden" id="failed-signup">
+					<i class="fas fa-exclamation-circle"></i>
+					<span>Error text here</span>
 				</div>
 				<button type="submit">create account</button>
 			</form>

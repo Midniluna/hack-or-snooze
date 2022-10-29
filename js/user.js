@@ -12,12 +12,21 @@ async function login(evt) {
 	const password = $("#login-password").val();
 
 	// sets gobal user to User instance, saving login info to the localstorage
-	currentUser = await User.login(username, password);
+	// if failed, alert user
+	let res;
+	try {
+		res = currentUser = await User.login(username, password);
+
+		saveUserCredentialsInLocalStorage();
+		updateUIOnUserLogin();
+		$faileLogin.hide();
+	} catch (error) {
+		console.log("We are getting this error:", error);
+		$failedLogin.show();
+		$failedUser.hide();
+	}
 
 	$loginForm.trigger("reset");
-
-	saveUserCredentialsInLocalStorage();
-	updateUIOnUserLogin();
 }
 
 $loginForm.on("submit", login);
@@ -32,15 +41,24 @@ async function signup(evt) {
 	const password = $("#signup-password").val();
 
 	// sends user info to API and creates new user with that info.
+	// If failed, alert user
 	let res;
 	try {
 		res = await User.signup(username, password, name);
 		saveUserCredentialsInLocalStorage();
 		updateUIOnUserLogin();
+		$failedUser.hide();
+		// Catch error and change message based on specific error
 	} catch (error) {
-		console.log("We are getting this error:", error);
+		if (username === "") {
+			$failedUser.show();
+			$failedUser.children("span")[0].innerText =
+				"Please enter a valid username!";
+		} else {
+			$failedUser.children("span")[0].innerText = "Username already taken!";
+		}
+		$failedLogin.hide();
 	}
-	// currentUser = await User.signup(username, password, name);
 
 	$signupForm.trigger("reset");
 }
