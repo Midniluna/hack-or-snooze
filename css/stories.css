@@ -29,6 +29,11 @@
 	text-decoration: none;
 }
 
+.story-hostname:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 .story-author {
 	margin-left: 2em;
 }

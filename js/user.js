@@ -51,11 +51,12 @@ async function signup(evt) {
 		// Catch error and change message based on specific error
 	} catch (error) {
 		if (username === "") {
-			$failedUser.show();
 			$failedUser.children("span")[0].innerText =
 				"Please enter a valid username!";
+			$failedUser.show();
 		} else {
 			$failedUser.children("span")[0].innerText = "Username already taken!";
+			$failedUser.show();
 		}
 		$failedLogin.hide();
 	}
